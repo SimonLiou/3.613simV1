@@ -1,31 +1,31 @@
 name: CICD for Serverless Application
-run-name: ${{ github.actor }} is doing CICD for Serverless Application
+run_name: ${{ github.actor }} is doing CICD for Serverless Application
 
 on:
   push:
     branches: [ main, "*" ]
 
 jobs:
-  pre-deploy: #job name(can be any name,which will appear on the github action page/pipeline)
+  pre_deploy:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "The job is automatically triggerd by a ${{ github.event_name }} event."
+      - run: echo "The job is automatically triggered by a ${{ github.event_name }} event."
 
-  install-dependencies:
+  install_dependencies:
     runs-on: ubuntu-latest
-    needs: pre-deploy
+    needs: pre_deploy
     steps:
       - name: Checkout repository code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
       - name: Run installation of dependencies command
         run: npm install
 
-  unit-testing:
+  unit_testing:
     runs-on: ubuntu-latest
-    needs: install-dependencies
+    needs: install_dependencies
     steps:
       - name: Checkout repository code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
       - name: Run installation of dependencies command
         run: npm install
       - name: Run unit testing command
@@ -33,17 +33,20 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    needs: unit-testing
+    needs: unit_testing
+    strategy:
+      matrix:
+        node-version: [14.x]  # Define the versions you want to use here
     steps:
       - name: Checkout repository code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm ci
       - name: Serverless deploy to AWS
-        uses: serverless/github-action@master
+        uses: serverless/github-action@v2
         with:
           args: deploy
         env:
@@ -52,14 +55,13 @@ jobs:
       - name: Retrieve secret from AWS
         uses: aws-actions/aws-secretsmanager-get-secrets@v1
         with:
-          secret-ids: |
-            simonliou78*
+          secret-ids: secret-id-1,secret-id-2  # Provide actual secret IDs
         env:
           AWS_REGION: ap-southeast-1
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - name: Show My Secrets
         run: |
-          for var in $(env | grep '^SIMONLIOU78_'); do
+          for var in $(env | grep '^SECRET_ID_'); do
             echo "Variable: $var"
           done
