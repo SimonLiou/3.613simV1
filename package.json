@@ -1,11 +1,17 @@
 {
-  "name": "simonm314",
+  "name": "3.613simv1",
   "version": "1.0.0",
-  "description": "",
+  "description": "Simon Secret Manager",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "serverless": "^3.34.0"
+  },
+  "devDependencies": {
+    "serverless-offline": "^12.0.4"
+  }
 }
