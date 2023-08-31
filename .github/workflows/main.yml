@@ -18,7 +18,7 @@ jobs:
       - name: Checkout repository code
         uses: actions/checkout@v3
       - name: Run installation of dependencies command
-        run: npm ci
+        run: npm install
 
   unit-testing:
     runs-on: ubuntu-latest
