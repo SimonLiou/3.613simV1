@@ -45,7 +45,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm ci
+      - run: npm install
       - name: Serverless deploy to AWS
         uses: serverless/github-action@master
         with:
